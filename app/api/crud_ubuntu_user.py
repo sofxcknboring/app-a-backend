@@ -94,4 +94,3 @@ async def get_all_users(
         return users
     else:
         return {"message": "Permission denied"}
-
