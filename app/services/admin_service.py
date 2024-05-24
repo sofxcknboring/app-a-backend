@@ -14,3 +14,20 @@ async def execute_sudo_command_async(command):
         raise Exception(f"Command '{command}' failed with error: {stderr.decode()}")
     return stdout.decode()
 
+
+async def execute_command(command):
+    try:
+        process = await asyncio.create_subprocess_shell(
+            command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            shell=True)
+
+        stdout, stderr = await process.communicate()
+        if process.returncode == 0:
+            return stdout.decode()
+        else:
+            return f"Failed to execute command: {stderr.decode()}"
+    except Exception as e:
+        return f"An error occurred: {e}"
+

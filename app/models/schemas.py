@@ -37,3 +37,19 @@ class UbuntuUserUpdate(UbuntuUserRead):
     new_username: str
     new_password: str
 
+
+# Other
+
+class BackupRequest(BaseModel):
+    backup_folders: list[str]
+    backup_dir: str
+    script_path: str
+
+
+class CronScheduleRequest(BaseModel):
+    script_path: str
+    minute: str
+    hour: str
+    day: str
+    month: str
+    day_of_week: str

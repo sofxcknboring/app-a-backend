@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi_users import FastAPIUsers
+
 from app.api.admin import admin_router
 from app.api.crud_ubuntu_user import crud_ubuntu_user_router
+from app.api.monitoring import process_ub_router
+from app.api.backup import backup_ub_router
+
 
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.base import User
@@ -45,6 +49,8 @@ app.include_router(
 
 app.include_router(admin_router)
 app.include_router(crud_ubuntu_user_router)
+app.include_router(process_ub_router)
+app.include_router(backup_ub_router)
 
 # CORS
 origins = [
