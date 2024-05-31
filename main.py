@@ -57,7 +57,7 @@ app.include_router(backup_ub_router)
 @app.post("/test_update")
 def update():
     try:
-        result = subprocess.run(["ssh", "ashvydko@192.168.205.71", "whoami"], capture_output=True, text=True)
+        result = subprocess.run(["ssh", "root@192.168.205.71", "whoami"], capture_output=True, text=True)
         return {"stdout": result.stdout, "stderr": result.stderr}
     except Exception as e:
         return {"error": str(e)}
