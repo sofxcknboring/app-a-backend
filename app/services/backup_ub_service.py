@@ -37,3 +37,4 @@ async def cron_schedule_backup(script_path, minute, hour, day, month, day_of_wee
     return {
         "schedule": f'{minute} {hour} {day} {month} {day_of_week} /user/bin/python3 {script_path}',
         "status": f'GOOD'}
+

@@ -19,3 +19,7 @@ current_active_user = fastapi_users.current_user(active=True)
 def protected_route(user: User = Depends(current_superuser)):
     return f"Hello, {user.email}. You are authenticated with a cookie or a JWT."
 
+
+@admin_router.get("/test")
+def protected_test_route(user: User = Depends(current_superuser)):
+    return f"Hello, {user.email}. You are authenticated with a cookie or a JWT."

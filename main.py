@@ -14,7 +14,7 @@ from app.services.auth_service import get_user_manager
 from app.utils.auth_config import auth_backend
 import logging
 import time
-import uvicorn
+
 
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
@@ -66,6 +66,3 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-if __name__ == "__main__":  
-    uvicorn.run(app, host="0.0.0.0", port=8081)
