@@ -1,5 +1,5 @@
-from config import SUDO_PASSWORD
 import asyncio
+from config import SUDO_PASSWORD
 
 
 async def execute_sudo_command_async(command):

@@ -14,6 +14,7 @@ from app.services.auth_service import get_user_manager
 from app.utils.auth_config import auth_backend
 import logging
 import time
+import subprocess
 
 
 fastapi_users = FastAPIUsers[User, int](
@@ -51,6 +52,15 @@ app.include_router(admin_router)
 app.include_router(crud_ubuntu_user_router)
 app.include_router(process_ub_router)
 app.include_router(backup_ub_router)
+
+
+@app.post("/test_update")
+def update():
+    try:
+        result = subprocess.run(["ssh", "ashvydko@192.168.205.71", "whoami"], capture_output=True, text=True)
+        return {"stdout": result.stdout, "stderr": result.stderr}
+    except Exception as e:
+        return {"error": str(e)}
 
 # CORS
 origins = [
