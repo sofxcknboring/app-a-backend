@@ -40,10 +40,11 @@ async def cron_schedule_backup(script_path, minute, hour, day, month, day_of_wee
 
         existing_jobs = cron.find_command(command)
         if not existing_jobs:
+
             job = cron.new(command=command)
             job.setall(minute, hour, day, month, day_of_week)
 
-            updated_crontab = str(cron)
+            updated_crontab = f"{current_crontab}\n{str(cron)}\n"
 
             temp_cron_path = "/tmp/temp_cron"
             async with conn.start_sftp_client() as sftp:
@@ -66,6 +67,7 @@ async def cron_schedule_backup(script_path, minute, hour, day, month, day_of_wee
         raise Exception(f"SSH connection or command execution failed: {str(e)}")
     except Exception as e:
         raise Exception(f"An unexpected error occurred: {str(e)}")
+
 
 
 
