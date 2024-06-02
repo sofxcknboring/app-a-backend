@@ -1,6 +1,6 @@
 from crontab import CronTab
 import asyncssh
-from admin_service import connect_to_ssh, execute_ssh_sudo_command_async
+from app.services.admin_service import connect_to_ssh, execute_ssh_sudo_command_async
 
 
 def generate_backup_script(backup_folders: list[str], backup_dir: str) -> str:
@@ -37,24 +37,36 @@ async def cron_schedule_backup(script_path, minute, hour, day, month, day_of_wee
         conn = await connect_to_ssh()
         current_crontab = await execute_ssh_sudo_command_async(conn, "crontab -l")
         cron = CronTab(tab=current_crontab)
-        job = cron.new(command=command)
-        job.setall(minute, hour, day, month, day_of_week)
-        updated_crontab = str(cron)
 
-        temp_cron_path = "/tmp/temp_cron"
-        async with conn.start_sftp_client() as sftp:
-            async with sftp.open(temp_cron_path, 'w') as temp_cron_file:
-                await temp_cron_file.write(updated_crontab)
-        await execute_ssh_sudo_command_async(conn, f"crontab {temp_cron_path}")
-        await execute_ssh_sudo_command_async(conn, f"rm {temp_cron_path}")
-        return {
-            "schedule": f'{minute} {hour} {day} {month} {day_of_week} {command}',
-            "status": "GOOD"
-        }
+        existing_jobs = cron.find_command(command)
+        if not existing_jobs:
+            job = cron.new(command=command)
+            job.setall(minute, hour, day, month, day_of_week)
+
+            updated_crontab = str(cron)
+
+            temp_cron_path = "/tmp/temp_cron"
+            async with conn.start_sftp_client() as sftp:
+                async with sftp.open(temp_cron_path, 'w') as temp_cron_file:
+                    await temp_cron_file.write(updated_crontab)
+
+            await execute_ssh_sudo_command_async(conn, f"crontab {temp_cron_path}")
+            await execute_ssh_sudo_command_async(conn, f"rm {temp_cron_path}")
+
+            return {
+                "schedule": f'{minute} {hour} {day} {month} {day_of_week} {command}',
+                "status": "GOOD"
+            }
+        else:
+            return {
+                "schedule": f'{minute} {hour} {day} {month} {day_of_week} {command}',
+                "status": "ALREADY_EXISTS"
+            }
     except asyncssh.Error as e:
         raise Exception(f"SSH connection or command execution failed: {str(e)}")
     except Exception as e:
         raise Exception(f"An unexpected error occurred: {str(e)}")
+
 
 
 
