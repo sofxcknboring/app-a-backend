@@ -1,7 +1,7 @@
 from crontab import CronTab
 
 
-def generate_backup_script(backup_folders, backup_dir):
+def generate_backup_script(backup_folders: list[str], backup_dir: str) -> str:
     script_content = f"""
 import os
 import tarfile

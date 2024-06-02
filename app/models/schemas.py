@@ -43,6 +43,7 @@ class UbuntuUserUpdate(UbuntuUserRead):
 class BackupRequest(BaseModel):
     backup_folders: list[str]
     backup_dir: str
+    temp_script_path: str
     script_path: str
 
 
