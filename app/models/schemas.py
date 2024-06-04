@@ -48,9 +48,12 @@ class BackupRequest(BaseModel):
 
 
 class CronScheduleRequest(BaseModel):
-    script_path: str
     minute: str
     hour: str
     day: str
     month: str
     day_of_week: str
+    script_type: str
+    script_path: str
+    comment: str
+

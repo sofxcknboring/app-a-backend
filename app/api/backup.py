@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi_users import FastAPIUsers
 import aiofiles
 import os
-import asyncssh
 from app.models.schemas import BackupRequest, CronScheduleRequest
 from app.models.user import User
 from app.services.auth_service import get_user_manager
@@ -42,15 +41,17 @@ async def create_backup_script(request: BackupRequest):
 
 
 @backup_ub_router.post("/schedule_backup/")
-async def api_schedule_backup(
-    request: CronScheduleRequest,
+async def api_schedule_backup_test(
+        request: CronScheduleRequest,
 ):
     response = await cron_schedule_backup(
-        request.script_path,
         request.minute,
         request.hour,
         request.day,
         request.month,
         request.day_of_week,
+        request.script_type,
+        request.script_path,
+        request.comment,
     )
     return response

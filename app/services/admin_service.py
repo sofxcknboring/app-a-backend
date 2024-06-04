@@ -15,3 +15,13 @@ async def execute_ssh_sudo_command_async(conn, command) -> str:
         raise Exception(f"Command execution failed: {str(e)}")
     except Exception as e:
         raise Exception(f"An unexpected error occurred: {str(e)}")
+
+
+async def execute_ssh_command_async(conn, command) -> str:
+    try:
+        result = await conn.run(command, check=True)
+        return result.stdout.strip()
+    except asyncssh.Error as e:
+        raise Exception(f"Command execution failed: {str(e)}")
+    except Exception as e:
+        raise Exception(f"An unexpected error occurred: {str(e)}")
