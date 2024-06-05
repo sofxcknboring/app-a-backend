@@ -41,19 +41,19 @@ class UbuntuUserUpdate(UbuntuUserRead):
 # Other
 
 class BackupRequest(BaseModel):
-    backup_folders: list[str]
-    backup_dir: str
-    temp_script_path: str
-    script_path: str
+    folders_for_backup: list[str] = ['/etc', '/var', '...']
+    dir_for_backup_file: str = "/home/.../backups/"
+    temp_script_path: str = "/code/create_script/script.py"
+    script_path: str = "/home/.../Scripts/script.py"
 
 
 class CronScheduleRequest(BaseModel):
-    minute: str
-    hour: str
-    day: str
-    month: str
-    day_of_week: str
-    script_type: str
-    script_path: str
-    comment: str
+    minute: str = "*"
+    hour: str = "*"
+    day: str = "*"
+    month: str = "*"
+    day_of_week: str = "*"
+    script_type: str = "python3"
+    script_path: str = "/home/.../Scripts/script.py"
+    comment: str = "##Comma"
 

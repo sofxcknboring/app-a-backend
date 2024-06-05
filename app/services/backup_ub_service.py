@@ -2,14 +2,14 @@ from app.services.admin_service import connect_to_ssh, execute_ssh_command_async
 import asyncssh
 
 
-def generate_backup_script(backup_folders: list[str], backup_dir: str) -> str:
+def generate_backup_script(folders_for_backup: list[str], dir_for_backup_file: str) -> str:
     script_content = f"""
 import os
 import tarfile
 from datetime import datetime
 
-BACKUP_FOLDERS = {backup_folders}
-BACKUP_DIR = '{backup_dir}'
+BACKUP_FOLDERS = {folders_for_backup}
+BACKUP_DIR = '{dir_for_backup_file}'
 
 def create_backup():
     current_time = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')

@@ -22,7 +22,7 @@ current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 @backup_ub_router.post("/create_backup_script/")
 async def create_backup_script(request: BackupRequest):
-    script_content = generate_backup_script(request.backup_folders, request.backup_dir)
+    script_content = generate_backup_script(request.folders_for_backup, request.dir_for_backup_file)
 
     async with aiofiles.open(request.temp_script_path, "w") as script_file:
         await script_file.write(script_content)

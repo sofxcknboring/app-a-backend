@@ -14,7 +14,7 @@ SECRET = SECRET_KEY
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
-    verification_token_lifetime_seconds = 7200
+    verification_token_lifetime_seconds = 28800
 
     async def validate_password(
             self,
