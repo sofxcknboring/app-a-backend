@@ -1,5 +1,3 @@
-from select import select
-
 from fastapi import APIRouter, Depends
 from fastapi_users import FastAPIUsers
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
