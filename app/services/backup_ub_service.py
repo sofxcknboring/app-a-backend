@@ -1,8 +1,10 @@
-from app.services.admin_service import connect_to_ssh, execute_ssh_command_async
+from app.services.admin_service import connect_to_ssh, execute_ssh_command_async, execute_ssh_sudo_command_async
 import asyncssh
+from typing import Dict
+from config import SSH_USER
 
 
-def generate_backup_script(folders_for_backup: list[str], dir_for_backup_file: str) -> str:
+def generate_backup_script(folders_for_backup, dir_for_backup_file) -> str:
     script_content = f"""
 import os
 import tarfile
@@ -27,6 +29,19 @@ if __name__ == "__main__":
     print(f"Backup created at: {{backup_path}}")
 """
     return script_content
+
+
+async def all_scripts() -> Dict[int, str]:
+    conn = await connect_to_ssh()
+    try:
+        scripts = await execute_ssh_command_async(conn, f"cd /home/{SSH_USER}/Scripts/ && ls")
+        scripts_list = [elem for elem in scripts.split('\n') if "." in elem]
+        if not scripts_list:
+            return {1: 'Folder is empty'}
+        else:
+            return {idx + 1: script for idx, script in enumerate(scripts_list)}
+    except Exception as e:
+        raise Exception(f"Error: {str(e)}")
 
 
 async def cron_schedule_backup(minute, hour, day, month, day_of_week, script_type,script_path, comment=""):

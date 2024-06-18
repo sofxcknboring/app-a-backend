@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi_users import FastAPIUsers
 
 from app.api.admin import admin_router
@@ -6,10 +6,9 @@ from app.api.crud_ubuntu_user import crud_ubuntu_user_router
 from app.api.monitoring import process_ub_router
 from app.api.backup import backup_ub_router
 
-
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.base import User
-from app.models.schemas import UserRead, UserCreate
+from app.models.schemas import UserRead, UserCreate, UserUpdate
 from app.services.auth_service import get_user_manager
 from app.utils.auth_config import auth_backend
 import logging
@@ -20,6 +19,9 @@ fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
     [auth_backend],
 )
+
+current_active_user = fastapi_users.current_user(active=True)
+current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 app = FastAPI()
 
@@ -46,6 +48,24 @@ app.include_router(
     prefix="/auth",
     tags=["auth"],
 )
+
+app.include_router(
+    fastapi_users.get_verify_router(UserRead),
+    prefix="/auth",
+    tags=["auth"],
+)
+
+app.include_router(
+    fastapi_users.get_users_router(UserRead, UserUpdate),
+    prefix="/users",
+    tags=["users"],
+)
+
+
+@app.get("/authenticated-route")
+async def authenticated_route(user: User = Depends(current_active_user)):
+    return {"message": f"Hello {user.email}!"}
+
 
 app.include_router(admin_router)
 app.include_router(crud_ubuntu_user_router)

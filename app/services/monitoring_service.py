@@ -15,3 +15,11 @@ async def high_load_processes():
     return correct_data[1:]
 
 
+async def get_system_load_data():
+    ssh_connect = await connect_to_ssh()
+    data = await execute_ssh_command_async(ssh_connect, "uptime")
+    load_average = data.split('average:')[1].strip()
+    load_average_list = [float(avg.strip()) for avg in load_average.split(',')]
+    return {
+        "load_average": load_average_list,
+    }

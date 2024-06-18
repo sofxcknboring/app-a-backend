@@ -8,9 +8,11 @@ async def connect_to_ssh():
 
 async def execute_ssh_sudo_command_async(conn, command) -> str:
     try:
-        full_command = f"echo {SUDO_PASSWORD} | sudo -S {command}"
-        result = await conn.run(full_command, check=True)
-        return result.stdout
+        sudo_command = f"echo '{SUDO_PASSWORD}' | sudo -S {command}"
+        result = await conn.run(sudo_command, check=True)
+        return result.stdout.strip()
+    except asyncssh.ProcessError as e:
+        raise Exception(f"Command execution failed: {e.stderr.strip()}")
     except asyncssh.Error as e:
         raise Exception(f"Command execution failed: {str(e)}")
     except Exception as e:

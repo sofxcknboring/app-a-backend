@@ -41,7 +41,7 @@ class UbuntuUserUpdate(UbuntuUserRead):
 # Other
 
 class BackupRequest(BaseModel):
-    folders_for_backup: list[str] = ['/etc', '/var', '...']
+    folders_for_backup: str = '/etc, /var, /...'
     dir_for_backup_file: str = "/home/.../backups/"
     temp_script_path: str = "/code/create_script/script.py"
     script_path: str = "/home/.../Scripts/script.py"

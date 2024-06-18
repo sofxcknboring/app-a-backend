@@ -37,7 +37,7 @@ async def create_ubuntu_user(
         else:
             return {"user": f"{ubuntu_user_create.username} already created"}
     else:
-        return {"You are not super"}
+        return {"message": "Permission denied"}
 
 
 @crud_ubuntu_user_router.delete('/delete-ub-user')
